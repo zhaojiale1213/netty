@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration scan="true" scanperiod="60 seconds" debug="false">
+    <!--定义参数常量-->
+    <!--trace < debug < info < warn < error-->
+    <property name="log.level" value="info"/>
+    <property name="log.maxHistory" value="30"/>
+    <property name="log.filepath" value="/logs/netty"/> <!--windows 下默认与项目根目录平级 -code 下， linux下待测试-->
+    <property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"/>
+    <!--控制台设置-->
+    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!--info设置-->
+    <appender name="infoAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--文件路径-->
+        <file>${log.filepath}/info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--文件名称-->
+            <fileNamePattern>${log.filepath}/info/info.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!--文件保存最大历史数-->
+            <MaxHistory>${log.maxHistory}</MaxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+        <!--只接info级别的日志-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- com.itcast.netty 包下所有的日志追加在 appender-ref 下 -->
+    <!--<logger name="com.itcast.netty" level="${log.level}" additivity="false">
+        <appender-ref ref="infoAppender"/>  &lt;!&ndash; 将日志追加到 infoAppender 里面&ndash;&gt;
+        <appender-ref ref="consoleAppender"/>  &lt;!&ndash; 将日志追加到 infoAppender 里面&ndash;&gt;
+    </logger>-->
+
+    <!-- 或者采用这种 additivity="true" 输出到控制台 输出到root-->
+    <logger name="com.itcast.netty" level="${log.level}" additivity="true">
+        <appender-ref ref="infoAppender"/>
+    </logger>
+
+    <root level="info">
+        <appender-ref ref="consoleAppender"/>
+    </root>
+</configuration>
