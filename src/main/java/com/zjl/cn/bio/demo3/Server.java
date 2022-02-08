@@ -16,6 +16,7 @@ public class Server {
     public static void main(String[] args) {
         try {
             ServerSocket serverSocket = new ServerSocket(9999);
+
             // 定义一个循环，不断接收客户端的socket的连接
             while (true) {
                 Socket socket = serverSocket.accept();
