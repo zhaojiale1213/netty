@@ -24,6 +24,26 @@ import java.util.Properties;
 @Slf4j
 public class ChannelTest {
 
+
+    @Test
+    public void test2() throws IOException {
+        FileInputStream fis = new FileInputStream("test.txt");
+        FileChannel fisChannel = fis.getChannel();
+
+        FileOutputStream fos = new FileOutputStream("test02.txt");
+        FileChannel fosChannel = fos.getChannel();
+
+        // from  输入端 -> 输出端
+        //fosChannel.transferFrom(fisChannel, fisChannel.position(), fisChannel.size());
+
+        // to    输入端 -> 输出端
+        fisChannel.transferTo(fisChannel.position(), fisChannel.size(), fosChannel);
+
+        fis.close();
+        fos.close();
+        log.info("复制完成");
+    }
+
     @Test
     public void test() {
         Map<String, String> map = System.getenv();

@@ -5,3 +5,4 @@
 .settings
 /netty-demo.iml
 /logs
+*.txt
