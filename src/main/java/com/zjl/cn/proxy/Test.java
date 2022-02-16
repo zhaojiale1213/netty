@@ -1,6 +1,7 @@
 package com.zjl.cn.proxy;
 
 import java.lang.reflect.Proxy;
+import java.net.InetSocketAddress;
 
 /**
  * @Description:
@@ -30,6 +31,14 @@ public class Test {
 
         System.out.println(proxy.SayHello("代理"));
 
+    }
+
+    @org.junit.Test
+    public void test2() {
+        InetSocketAddress socketAddress = new InetSocketAddress("127.0.0.1", 8888);
+        System.out.println(socketAddress.getHostName());
+        System.out.println(socketAddress.getHostString());
+        System.out.println(socketAddress.getPort());
     }
 
 }
