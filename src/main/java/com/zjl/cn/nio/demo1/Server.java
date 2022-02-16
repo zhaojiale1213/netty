@@ -23,6 +23,7 @@ public class Server {
 
 
     public static void main(String[] args) throws IOException {
+        System.out.println("服务端启动----------------");
 
         // 获取通道
         ServerSocketChannel ssChannel = ServerSocketChannel.open();
@@ -34,7 +35,7 @@ public class Server {
         Selector selector = Selector.open();
         // 绑定选择器，指定监听事件为 接收事件
         ssChannel.register(selector, SelectionKey.OP_ACCEPT);
-        // 阻塞式方法
+        // 阻塞式方法，等待客户端连接
         while (selector.select() > 0) {
             Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
             while (iterator.hasNext()) {
