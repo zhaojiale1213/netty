@@ -33,7 +33,7 @@ public class Server {
         ssChannel.bind(new InetSocketAddress(9999));
         // 获取选择器
         Selector selector = Selector.open();
-        // 绑定选择器，指定监听事件为 接收事件
+        // 绑定选择器，指定监听事件为 接收连接事件
         ssChannel.register(selector, SelectionKey.OP_ACCEPT);
         // 阻塞式方法，等待客户端连接
         while (selector.select() > 0) {
