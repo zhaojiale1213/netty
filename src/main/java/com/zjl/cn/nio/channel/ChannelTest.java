@@ -1,7 +1,5 @@
 package com.zjl.cn.nio.channel;
 
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -25,19 +23,41 @@ import java.util.Properties;
 public class ChannelTest {
 
 
+    /** 使用此方法copy */
+    @Test
+    public void test3() {
+        try(
+            FileChannel from = new FileInputStream("test.txt").getChannel();
+            FileChannel to = new FileOutputStream("test03.txt").getChannel()
+        ) {
+            long size = from.size();
+
+            // left 还剩余多少字节
+            for (long left = size; left > 0;) {
+                System.out.println("position: " + (size - left) + " left: " + left);
+                // transferTo 返回实际传输的数据量
+                left -= from.transferTo(size - left, left, to);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     @Test
     public void test2() throws IOException {
         FileInputStream fis = new FileInputStream("test.txt");
-        FileChannel fisChannel = fis.getChannel();
+        FileChannel from = fis.getChannel();
 
         FileOutputStream fos = new FileOutputStream("test02.txt");
-        FileChannel fosChannel = fos.getChannel();
+        FileChannel to = fos.getChannel();
 
-        // from  输入端 -> 输出端
-        //fosChannel.transferFrom(fisChannel, fisChannel.position(), fisChannel.size());
+        // from  来源  输入端 -> 输出端
+        //to.transferFrom(from, from.position(), from.size());
 
-        // to    输入端 -> 输出端
-        fisChannel.transferTo(fisChannel.position(), fisChannel.size(), fosChannel);
+        // to  目标  输入端 -> 输出端
+        /** 效率高，底层使用操作系统的零拷贝，默认限制2g大小数据 */
+        from.transferTo(from.position(), from.size(), to);
 
         fis.close();
         fos.close();
