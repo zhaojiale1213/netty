@@ -22,6 +22,13 @@ import java.util.Iterator;
 public class Server {
 
 
+    /**
+     * SelectionKey.OP_ACCEPT ：服务端接收建立连接请求时触发
+     * SelectionKey.OP_CONNECT ：客户端接待服务端建立连接后触发
+     * SelectionKey.OP_READ ： 服务端接收数据（可读事件）
+     * SelectionKey.OP_WRITE ： 可写事件
+     */
+
     public static void main(String[] args) throws IOException {
         System.out.println("服务端启动----------------");
 
