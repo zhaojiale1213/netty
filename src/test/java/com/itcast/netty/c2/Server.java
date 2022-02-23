@@ -75,7 +75,7 @@ public class Server {
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
-                        System.out.println("key: " + key + " 下线了");
+                        log.info("key: " + key + " 下线了");
                         /** 客户端关闭后，从 selectedKeys集合 中移除这个key */
                         key.cancel();
                     }
