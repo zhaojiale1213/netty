@@ -53,7 +53,7 @@ public class Server {
                 if (key.isAcceptable()) {
                     // 取消事件 - 也是处理掉了
 //                key.cancel();
-                    log.info("key: {}", key);
+                    log.info("Accept key: {}", key);
                     ServerSocketChannel channel = (ServerSocketChannel) key.channel();
                     SocketChannel sc = channel.accept();
                     sc.configureBlocking(false);
@@ -61,6 +61,7 @@ public class Server {
                     SelectionKey scKey = sc.register(selector, 0, null);
                     scKey.interestOps(SelectionKey.OP_READ);
                 } else if (key.isReadable()) {
+                    log.info("Read key: {}", key);
                     /** 客户端关闭连接 read 会报 IOException, 关闭时会发送一个read事件 */
                     try {
                         SocketChannel channel = (SocketChannel) key.channel();
