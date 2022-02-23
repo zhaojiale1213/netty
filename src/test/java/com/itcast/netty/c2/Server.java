@@ -4,9 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
 /**
@@ -43,13 +46,43 @@ public class Server {
         while (true) {
             // select() 没事件发生，阻塞，有事件，继续运行
             selector.select();
-            // selectedKeys() 包含所有发生的事件
+            // selectedKeys() 包含所有发生的事件, 不会主动删除事件
             Iterator<SelectionKey> iter = selector.selectedKeys().iterator();
             while (iter.hasNext()) {
                 SelectionKey key = iter.next();
-                log.info("key: {}", key);
-                ServerSocketChannel channel = (ServerSocketChannel) key.channel();
-                channel.accept();
+                if (key.isAcceptable()) {
+                    // 取消事件 - 也是处理掉了
+//                key.cancel();
+                    log.info("key: {}", key);
+                    ServerSocketChannel channel = (ServerSocketChannel) key.channel();
+                    SocketChannel sc = channel.accept();
+                    sc.configureBlocking(false);
+
+                    SelectionKey scKey = sc.register(selector, 0, null);
+                    scKey.interestOps(SelectionKey.OP_READ);
+                } else if (key.isReadable()) {
+                    /** 客户端关闭连接 read 会报 IOException, 关闭时会发送一个read事件 */
+                    try {
+                        SocketChannel channel = (SocketChannel) key.channel();
+                        ByteBuffer buffer = ByteBuffer.allocate(1024);
+                        /** 客户端主动断开， read = -1 关流， read = 0, 读到的数据为0 */
+                        int read = channel.read(buffer);
+                        if (read == -1) {
+                            key.cancel();
+                        } else {
+                            buffer.flip();
+                            System.out.println(StandardCharsets.UTF_8.decode(buffer).toString());
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.out.println("key: " + key + " 下线了");
+                        /** 客户端关闭后，从 selectedKeys集合 中移除这个key */
+                        key.cancel();
+                    }
+                }
+
+
+                iter.remove();
             }
         }
     }
