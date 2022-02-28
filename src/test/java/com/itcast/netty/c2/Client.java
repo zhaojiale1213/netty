@@ -2,7 +2,9 @@ package com.itcast.netty.c2;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
 
 /**
  * @Description:
@@ -14,10 +16,14 @@ public class Client {
 
     public static void main(String[] args) throws IOException {
         // 获取通道
-        SocketChannel socketChannel = SocketChannel.open(new InetSocketAddress("127.0.0.1", 9999));
+        SocketChannel sc = SocketChannel.open(new InetSocketAddress("127.0.0.1", 9999));
+//        sc.connect(new InetSocketAddress("127.0.0.1", 9999));
+        SocketAddress address = sc.getLocalAddress();
+//        sc.write(Charset.defaultCharset().encode("hello\nworld\n"));
+        sc.write(Charset.defaultCharset().encode("012345678\n9abcdefg3333\n"));
         // 切换非阻塞模式
-        socketChannel.configureBlocking(false);
-        System.out.println("wait****************");
+//        sc.configureBlocking(false);
+        System.in.read();
     }
 
 }

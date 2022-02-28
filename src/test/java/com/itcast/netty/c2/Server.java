@@ -9,6 +9,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
@@ -25,7 +26,7 @@ public class Server {
      * SelectionKey.OP_ACCEPT ：服务端接收建立连接请求时触发
      * SelectionKey.OP_CONNECT ：客户端接待服务端建立连接后触发
      * SelectionKey.OP_READ ： 服务端接收数据（可读事件）
-     * SelectionKey.OP_WRITE ： 可写事件
+     * SelectionKey.OP_WRITE ： 服务端可写事件（数据量大，一次无法写完）
      */
 
     public static void main(String[] args) throws IOException {
@@ -58,21 +59,32 @@ public class Server {
                     SocketChannel sc = channel.accept();
                     sc.configureBlocking(false);
 
-                    SelectionKey scKey = sc.register(selector, 0, null);
+                    /** 设置附件属性 */
+                    ByteBuffer buffer = ByteBuffer.allocate(10);
+                    SelectionKey scKey = sc.register(selector, 0, buffer);
                     scKey.interestOps(SelectionKey.OP_READ);
                 } else if (key.isReadable()) {
+                    /** 传输数据超过缓冲区大小时，会多次触发读事件，直到传输完毕 */
                     log.info("Read key: {}", key);
-                    /** 客户端关闭连接 read 会报 IOException, 关闭时会发送一个read事件 */
+                    /** 客户端关异常闭连接 read 会报 IOException, 关闭时会发送一个read事件 */
                     try {
                         SocketChannel channel = (SocketChannel) key.channel();
-                        ByteBuffer buffer = ByteBuffer.allocate(1024);
+                        // 获取附件
+                        ByteBuffer buffer = (ByteBuffer) key.attachment();
                         /** 客户端主动断开， read = -1 关流， read = 0, 读到的数据为0 */
                         int read = channel.read(buffer);
                         if (read == -1) {
                             key.cancel();
                         } else {
-                            buffer.flip();
-                            System.out.println(StandardCharsets.UTF_8.decode(buffer).toString());
+                            split(buffer);
+                            /** 消息大小超过ByteBuffer,未读到分隔符, 扩容 */
+                            if (buffer.position() == buffer.limit()) {
+                                ByteBuffer newBuffer = ByteBuffer.allocate(2 * buffer.capacity());
+                                buffer.flip();
+                                newBuffer.put(buffer);
+                                // 重新绑定附件
+                                key.attach(newBuffer);
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -86,6 +98,28 @@ public class Server {
                 iter.remove();
             }
         }
+    }
+
+
+    private static void split(ByteBuffer source) {
+        //切换成读模式
+        source.flip();
+        for (int i = 0; i < source.limit(); i++) {
+            // get(index) 不会修改 position
+            if (source.get(i) == '\n') {
+                // 每条字符串的长度  索引相减 + 1
+                int length = i - source.position() + 1;
+                ByteBuffer target = ByteBuffer.allocate(length);
+                for (int j = 0; j < length; j++) {
+                    target.put(source.get());
+                }
+                // 切换至读模式 - 打印输出
+                target.flip();
+                System.out.println("服务端接收：" + Charset.defaultCharset().decode(target).toString());
+            }
+        }
+        //切换至写模式
+        source.compact();
     }
 
 }

@@ -33,11 +33,18 @@ public class TestByteBufferExam {
         split(source);
 
         System.out.println((int) '\n');
+
+        // 测试compact
+//        ByteBuffer source = ByteBuffer.allocate(10);
+//        source.put("0123456789".getBytes(StandardCharsets.UTF_8));
+//        split(source);
     }
 
     private static void split(ByteBuffer source) {
+        System.out.println("flip前: " + " position: " + source.position() + " remaining:" + source.remaining() + " limit:" + source.limit());
         //切换成读模式
         source.flip();
+        System.out.println("flip后: " + " position: " + source.position() + " remaining:" + source.remaining() + " limit:" + source.limit());
         for (int i = 0; i < source.limit(); i++) {
             // get(index) 不会修改 position
             if (source.get(i) == '\n') {
@@ -52,7 +59,9 @@ public class TestByteBufferExam {
                 System.out.println(StandardCharsets.UTF_8.decode(target).toString());
             }
         }
+        System.out.println("compact前: " + " position: " + source.position() + " remaining:" + source.remaining() + " limit:" + source.limit());
         //切换至写模式
         source.compact();
+        System.out.println("compact后: " + " position: " + source.position() + " remaining:" + source.remaining() + " limit:" + source.limit());
     }
 }
