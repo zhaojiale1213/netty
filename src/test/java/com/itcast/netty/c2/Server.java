@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
 /**
- * @Description:
+ * @Description: ByteBuffer 扩容和channel绑定
  * @Author: zjl
  * @Date:Created in 2022/2/22 22:28
  * @Modified By:
@@ -93,7 +93,6 @@ public class Server {
                         key.cancel();
                     }
                 }
-
 
                 iter.remove();
             }
