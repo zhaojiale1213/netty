@@ -1,4 +1,4 @@
-package com.itcast.netty.c2;
+package com.itcast.nio.c2;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,7 +10,6 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
 /**

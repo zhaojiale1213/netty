@@ -1,4 +1,4 @@
-package com.itcast.netty.thread;
+package com.itcast.nio.thread;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
