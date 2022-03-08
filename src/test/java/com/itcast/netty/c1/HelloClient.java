@@ -1,4 +1,4 @@
-package com.itcast.netty;
+package com.itcast.netty.c1;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;

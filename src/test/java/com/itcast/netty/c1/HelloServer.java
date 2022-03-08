@@ -1,4 +1,4 @@
-package com.itcast.netty;
+package com.itcast.netty.c1;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelHandlerContext;
@@ -29,7 +29,7 @@ public class HelloServer {
                 @Override
                 protected void initChannel(NioSocketChannel ch) throws Exception {
                     // 添加handler
-                    ch.pipeline().addLast(new StringDecoder());  //解码器 - 将byteBuf 转为字符串
+                    ch.pipeline().addLast(new StringDecoder());  //解码器 - 将 (Object msg) ByteBuf 转为字符串
                     ch.pipeline().addLast(new ChannelInboundHandlerAdapter() {
                         @Override
                         public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
