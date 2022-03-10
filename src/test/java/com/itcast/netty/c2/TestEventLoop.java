@@ -19,7 +19,7 @@ public class TestEventLoop {
 
     public static void main(String[] args) {
         EventLoopGroup group = new NioEventLoopGroup(2);  // 可以处理：IO事件、普通任务、定时任务
-//        EventLoopGroup group = new DefaultEventLoopGroup();  // 可以处理：IO事件、普通任务、定时任务
+//        EventLoopGroup group = new DefaultEventLoopGroup();  // 可以处理：普通任务、定时任务
 
         System.out.println(NettyRuntime.availableProcessors());
 

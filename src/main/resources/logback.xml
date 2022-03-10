@@ -45,6 +45,10 @@
 <!--        <appender-ref ref="infoAppender"/>-->
     </logger>
 
+    <logger name="io.netty.handler.logging.LoggingHandler" level="DEBUG" additivity="false">
+        <appender-ref ref="consoleAppender"/>
+    </logger>
+
     <root level="info">
         <appender-ref ref="consoleAppender"/>
         <appender-ref ref="infoAppender"/>
