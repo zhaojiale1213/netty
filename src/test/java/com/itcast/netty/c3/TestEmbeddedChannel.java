@@ -1,4 +1,4 @@
-package com.itcast.netty.c2;
+package com.itcast.netty.c3;
 
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.ChannelHandlerContext;
