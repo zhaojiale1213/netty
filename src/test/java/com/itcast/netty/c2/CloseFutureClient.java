@@ -25,8 +25,9 @@ import java.util.Scanner;
 public class CloseFutureClient {
 
     public static void main(String[] args) throws InterruptedException {
+        NioEventLoopGroup group = new NioEventLoopGroup();
         ChannelFuture future = new Bootstrap()
-            .group(new NioEventLoopGroup())
+            .group(group)
             .channel(NioSocketChannel.class)
             .handler(new ChannelInitializer<NioSocketChannel>() {
                 @Override
@@ -66,6 +67,7 @@ public class CloseFutureClient {
             @Override // 调用close方法的线程，待关闭后，回调此方法
             public void operationComplete(ChannelFuture future) throws Exception {
                 log.debug("处理关闭=====");
+                group.shutdownGracefully();
             }
         });
 
