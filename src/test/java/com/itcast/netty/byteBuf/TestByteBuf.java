@@ -2,6 +2,7 @@ package com.itcast.netty.byteBuf;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.CompositeByteBuf;
 import org.junit.Test;
 
 /**
@@ -33,5 +34,25 @@ public class TestByteBuf {
     }
 
 
+    /**
+     * compositeBuffer  将多个小的 ByteBuf 逻辑组成一个，减小拷贝
+     */
+    @Test
+    public void test1() {
+        ByteBuf buf1 = ByteBufAllocator.DEFAULT.buffer();
+        buf1.writeBytes(new byte[] {1, 2, 3, 4, 5});
+        buf1.retain();
+
+        ByteBuf buf2 = ByteBufAllocator.DEFAULT.buffer();
+        buf2.writeBytes(new byte[] {6, 7, 8, 9, 10});
+        buf2.retain();
+
+        CompositeByteBuf byteBufs = ByteBufAllocator.DEFAULT.compositeBuffer();
+        byteBufs.addComponents(true, buf1, buf2);
+        System.out.println(byteBufs);
+
+        buf1.release();
+        buf2.release();
+    }
 
 }
