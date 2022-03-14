@@ -63,6 +63,7 @@ public class TestPipeline {
 
                         }
                     });
+
                     pipeline.addLast("h4", new ChannelOutboundHandlerAdapter() {
                         @Override
                         public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
