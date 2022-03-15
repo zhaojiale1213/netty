@@ -22,9 +22,13 @@ import java.nio.charset.Charset;
 public class TestPipeline {
 
     public static void main(String[] args) {
-        new ServerBootstrap()
-            .group(new NioEventLoopGroup())
+        ServerBootstrap serverBootstrap = new ServerBootstrap();
+        serverBootstrap.group(new NioEventLoopGroup())
             .channel(NioServerSocketChannel.class)
+            /** 调整系统的接收缓冲区（滑动窗口）大小 -- 对应的还有发送缓冲区（滑动窗口大小） */
+//            .option(ChannelOption.SO_RCVBUF, 10)
+            /** 调整netty byteBuf缓冲区大小  默认是 1024 */
+//            .childOption(ChannelOption.RCVBUF_ALLOCATOR, new AdaptiveRecvByteBufAllocator(16, 16, 16))
             .childHandler(new ChannelInitializer<NioSocketChannel>() {
                 @Override
                 protected void initChannel(NioSocketChannel ch) throws Exception {

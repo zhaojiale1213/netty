@@ -55,4 +55,13 @@ public class TestByteBuf {
         buf2.release();
     }
 
+
+    @Test
+    public void test2() {
+        char c = '0';
+        byte b = 0;
+        System.out.println(c);
+        System.out.println(c == b);
+    }
+
 }
