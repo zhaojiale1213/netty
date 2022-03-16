@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.nio.charset.StandardCharsets;
 
 /**
- * @Description:
+ * @Description: EmbeddedChannel 调试 Pipeline 中的进出站处理器
  * @Author: zjl
  * @Date:Created in 2022/3/13 20:45
  * @Modified By:

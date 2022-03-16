@@ -62,6 +62,10 @@ public class TestByteBuf {
         byte b = 0;
         System.out.println(c);
         System.out.println(c == b);
+
+        /** 0x 代表 16进制  1个字节对应2个16进制字符 */
+        /** 0x000c -->  000c  -->  2个字节  -->  对应10进制：12 */
+        System.out.println(0x000c);
     }
 
 }
