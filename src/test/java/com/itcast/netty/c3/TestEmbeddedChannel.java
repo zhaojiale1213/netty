@@ -52,8 +52,10 @@ public class TestEmbeddedChannel {
 
         EmbeddedChannel channel = new EmbeddedChannel(h1, h2, h3, h4);
 
+        //进站消息
         channel.writeInbound(ByteBufAllocator.DEFAULT.buffer().writeBytes("hello".getBytes(StandardCharsets.UTF_8)));
 
+        //出站消息
         channel.writeOutbound(ByteBufAllocator.DEFAULT.buffer().writeBytes("hello".getBytes(StandardCharsets.UTF_8)));
     }
 

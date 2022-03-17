@@ -39,7 +39,7 @@ public class CloseFutureClient {
             .connect(new InetSocketAddress("127.0.0.1", 8080));
 
         Channel channel = future.sync().channel();
-        log.debug("{}", channel);
+        log.info("{}", channel);
 
         new Thread(new Runnable() {
             @Override
@@ -49,6 +49,7 @@ public class CloseFutureClient {
                     String line = scanner.nextLine();
                     if ("q".equalsIgnoreCase(line)) {
                         // close 异步操作
+                        log.info("调用close()方法关闭");
                         channel.close();
                         break;
                     }
@@ -57,7 +58,8 @@ public class CloseFutureClient {
             }
         }, "input").start();
 
-        /** 处理关闭  1.同步关闭  2.异步关闭*/
+        /** 处理关闭  1.同步关闭，阻塞在这，等待关闭
+         *           2.异步关闭  等待 channel.close()调用后触发*/
         ChannelFuture closeFuture = channel.closeFuture();
 //        log.info("wait close");
 //        closeFuture.sync();
@@ -66,7 +68,7 @@ public class CloseFutureClient {
         closeFuture.addListener(new ChannelFutureListener() {
             @Override // 调用close方法的线程，待关闭后，回调此方法
             public void operationComplete(ChannelFuture future) throws Exception {
-                log.debug("处理关闭=====");
+                log.info("触发关闭回调=====");
                 group.shutdownGracefully();
             }
         });
