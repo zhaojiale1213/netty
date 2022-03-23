@@ -35,10 +35,10 @@
     </appender>
 
     <!-- com.itcast.netty 包下所有的日志追加在 appender-ref 下 -->
-    <!--<logger name="com.itcast.netty" level="${log.level}" additivity="false">
-        <appender-ref ref="infoAppender"/>  &lt;!&ndash; 将日志追加到 infoAppender 里面&ndash;&gt;
-        <appender-ref ref="consoleAppender"/>  &lt;!&ndash; 将日志追加到 infoAppender 里面&ndash;&gt;
-    </logger>-->
+    <logger name="cn.itcast" level="debug" additivity="false">
+<!--        <appender-ref ref="infoAppender"/>  &lt;!&ndash; 将日志追加到 infoAppender 里面&ndash;&gt;-->
+        <appender-ref ref="consoleAppender"/>  <!-- 将日志追加到 infoAppender 里面-->
+    </logger>
 
     <!-- 或者采用这种 additivity="true" 输出到控制台 输出到root-->
     <logger name="com.itcast.netty" level="${log.level}" additivity="true">

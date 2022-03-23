@@ -22,7 +22,7 @@ import java.util.List;
 @Slf4j
 public class MessageCodec extends ByteToMessageCodec<Message> {
 
-    // 编码
+    // 编码：12个字节(魔数 + 版本 、、、) + 4个字节长度 + 真实的内容长度对应的字节
     @Override
     protected void encode(ChannelHandlerContext ctx, Message msg, ByteBuf out) throws Exception {
         // 4字节的魔数, 1个int = 4个字节
@@ -46,7 +46,7 @@ public class MessageCodec extends ByteToMessageCodec<Message> {
         oos.writeObject(msg);
         byte[] bytes = bos.toByteArray();
 
-        // 写入长度
+        // 写入长度 - 4个字节
         out.writeInt(bytes.length);
 
         // 将byte数组中的内容写入ByteBuf
