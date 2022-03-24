@@ -1,10 +1,10 @@
 package cn.itcast.protocol;
 
-
 import cn.itcast.message.Message;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.ByteToMessageCodec;
+import io.netty.handler.codec.MessageToMessageCodec;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayInputStream;
@@ -14,17 +14,21 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 
 /**
- * @Description:
+ * @Description: 必须和 LengthFieldBasedFrameDecoder 一起使用，确保接到的 ByteBuf 消息是完整的
+ *               编解码器
  * @Author: zjl
- * @Date:Created in 2022/3/20 16:52
+ * @Date:Created in 2022/3/23 22:21
  * @Modified By:
  */
 @Slf4j
-public class MessageCodec extends ByteToMessageCodec<Message> {
+@ChannelHandler.Sharable
+public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message> {
 
-    //  出站时使用  编码：12个字节(魔数 + 版本 、、、) + 4个字节长度 + 真实的内容长度对应的字节
+
+    /** 出站时使用  编码：12个字节(魔数 + 版本 、、、) + 4个字节长度 + 真实的内容长度对应的字节 */
     @Override
-    protected void encode(ChannelHandlerContext ctx, Message msg, ByteBuf out) throws Exception {
+    protected void encode(ChannelHandlerContext ctx, Message msg, List<Object> outs) throws Exception {
+        ByteBuf out = ctx.alloc().buffer();
         // 4字节的魔数, 1个int = 4个字节
         out.writeBytes(new byte[] {1, 2, 3, 4});
         // 1字节的版本
@@ -51,10 +55,13 @@ public class MessageCodec extends ByteToMessageCodec<Message> {
 
         // 将byte数组中的内容写入ByteBuf
         out.writeBytes(bytes);
+
+        /** 消息向下传递 */
+        outs.add(out);
         log.info("encode - 编码");
     }
 
-    // 进站时使用 解码, 参照编码逆向进行
+    /** 进站时使用 解码, 参照编码逆向进行 */
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         int magicNum = in.readInt();
@@ -73,8 +80,7 @@ public class MessageCodec extends ByteToMessageCodec<Message> {
 
         log.info("解码：magicNum - {}, version - {}, serializerType - {}, msgType - {}, sequenceId - {}, length - {}, message - {}",
             magicNum, version, serializerType, msgType, sequenceId, length, message);
-        //消息向下传递
+        /** 消息向下传递 */
         out.add(message);
     }
-
 }
