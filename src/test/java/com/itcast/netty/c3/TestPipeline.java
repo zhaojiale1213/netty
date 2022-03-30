@@ -13,7 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.nio.charset.Charset;
 
 /**
- * @Description:
+ * @Description:  channel.writeAndFlush() 从tail处理器往前查找 OutboundHandler 处理器执行  都是向前查找
+ *                ctx.writeAndFlush() 从当前处理器向前查找 OutboundHandler 处理器执行
  * @Author: zjl
  * @Date:Created in 2022/3/12 19:49
  * @Modified By:

@@ -25,7 +25,7 @@ import java.util.List;
 public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message> {
 
 
-    /** 出站时使用  编码：12个字节(魔数 + 版本 、、、) + 4个字节长度 + 真实的内容长度对应的字节 */
+    /** 出站时使用, msg => ByteBuf  编码：12个字节(魔数 + 版本 、、、) + 4个字节长度 + 真实的内容长度对应的字节 */
     @Override
     protected void encode(ChannelHandlerContext ctx, Message msg, List<Object> outs) throws Exception {
         ByteBuf out = ctx.alloc().buffer();
@@ -61,7 +61,7 @@ public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message
         log.info("encode - 编码");
     }
 
-    /** 进站时使用 解码, 参照编码逆向进行 */
+    /** 进站时使用 ByteBuf => msg 解码, 参照编码逆向进行 */
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         int magicNum = in.readInt();

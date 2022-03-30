@@ -2,10 +2,10 @@ package cn.itcast.server;
 
 import cn.itcast.protocol.MessageCodecSharable;
 import cn.itcast.protocol.ProtocolFrameDecoder;
+import cn.itcast.server.handler.ChatRequestMessageHandler;
+import cn.itcast.server.handler.LoginRequestMessageHandler;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -39,8 +39,10 @@ public class ChatServer {
                     ChannelPipeline pipeline = ch.pipeline();
                     /** 解决粘包、半包，使用 LengthFieldBasedFrameDecoder 解码器*/
                     pipeline.addLast(new ProtocolFrameDecoder());
-                    pipeline.addLast(logHandler);
+//                    pipeline.addLast(logHandler);
                     pipeline.addLast(messageCodec);
+                    pipeline.addLast(new LoginRequestMessageHandler());
+                    pipeline.addLast(new ChatRequestMessageHandler());
                 }
             });
             ChannelFuture channelFuture = serverBootstrap.bind(8080).sync();
