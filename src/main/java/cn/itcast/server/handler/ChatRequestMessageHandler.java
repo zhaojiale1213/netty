@@ -11,7 +11,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import java.util.Objects;
 
 /**
- * @Description:
+ * @Description: 单聊消息处理器
  * @Author: zjl
  * @Date:Created in 2022/3/30 22:58
  * @Modified By:
