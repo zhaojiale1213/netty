@@ -1,5 +1,6 @@
 package cn.itcast.server.session;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import io.netty.channel.Channel;
 
@@ -28,7 +29,7 @@ public class SessionMemoryImpl implements Session {
     @Override
     public void unbind(Channel channel) {
         String username = channelUsernameMap.remove(channel);
-        usernameChannelMap.remove(username);
+        if (StrUtil.isNotEmpty(username)) usernameChannelMap.remove(username);
         channelAttributesMap.remove(channel);
     }
 

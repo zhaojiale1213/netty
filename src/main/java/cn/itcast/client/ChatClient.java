@@ -1,6 +1,7 @@
 package cn.itcast.client;
 
 import cn.hutool.json.JSONUtil;
+import cn.itcast.client.handler.IdleClientHandler;
 import cn.itcast.message.*;
 import cn.itcast.protocol.MessageCodecSharable;
 import cn.itcast.protocol.ProtocolFrameDecoder;
@@ -11,6 +12,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -48,8 +50,11 @@ public class ChatClient {
                     ChannelPipeline pipeline = ch.pipeline();
                     /** 解决粘包、半包，使用 LengthFieldBasedFrameDecoder 解码器*/
                     pipeline.addLast(new ProtocolFrameDecoder());
-//                    pipeline.addLast(logHandler);
+                    pipeline.addLast(logHandler);
                     pipeline.addLast(messageCodec);
+                    /** 客户端3s写超时时间，写超时时间一般为服务端读超时时间的一半 */
+                    pipeline.addLast(new IdleStateHandler(0, 10, 0));
+                    pipeline.addLast("IdleClientHandler", new IdleClientHandler());
                     pipeline.addLast("client handler", new ChannelInboundHandlerAdapter() {
                         /** 连接建立后触发 active 事件 */
                         @Override
@@ -130,6 +135,12 @@ public class ChatClient {
                                 if (message.isSuccess()) login.compareAndSet(false, true);
                                 wait_for_login.countDown();
                             }
+                        }
+
+                        /** 连接断开触发 */
+                        @Override
+                        public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+                            log.info("连接已断开, 按任意键退出");
                         }
                     });
                 }
