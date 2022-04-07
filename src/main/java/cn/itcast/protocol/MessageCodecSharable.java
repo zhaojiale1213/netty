@@ -1,5 +1,6 @@
 package cn.itcast.protocol;
 
+import cn.itcast.config.Config;
 import cn.itcast.message.Message;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
@@ -12,6 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @Description: 必须和 LengthFieldBasedFrameDecoder 一起使用，确保接到的 ByteBuf 消息是完整的
@@ -34,8 +36,8 @@ public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message
         // 1字节的版本
         out.writeByte(1);
         // 1字节的序列化方式 0-jdk序列化方式  1-json
-        out.writeByte(0);
-        // 1字节的指令类型
+        out.writeByte(Config.getSerializerAlgorithm().ordinal());
+        // 1字节的消息-指令类型
         out.writeByte(msg.getMessageType());
         // 4个字节 序号
         out.writeInt(msg.getSequenceId());
@@ -45,10 +47,7 @@ public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message
         out.writeByte(0xff);
 
         // jdk方式获取序列化后的二进制数据
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(msg);
-        byte[] bytes = bos.toByteArray();
+        byte[] bytes = Config.getSerializerAlgorithm().serializer(msg);
 
         // 写入长度 - 4个字节
         out.writeInt(bytes.length);
@@ -75,8 +74,12 @@ public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message
         byte[] bytes = new byte[length];
         in.readBytes(bytes, 0, length);
 
-        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
-        Message message = (Message) ois.readObject();
+        Serializer.Algorithm algorithm = Objects.requireNonNull(Serializer.Algorithm.findAlgorithm(serializerType));
+        Class<? extends Message> messageClass = Message.getMessageClass(msgType);
+        Message message = algorithm.deserialize(messageClass, bytes);
+
+        /** Message 抽象类无法实例化，反射默认调用空参构造 */
+//        Message message = algorithm.deserialize(Message.class, bytes);
 
         log.info("解码：magicNum - {}, version - {}, serializerType - {}, msgType - {}, sequenceId - {}, length - {}, message - {}",
             magicNum, version, serializerType, msgType, sequenceId, length, message);
