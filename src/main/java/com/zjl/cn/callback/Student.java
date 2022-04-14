@@ -1,4 +1,4 @@
-package com.zjl.cn.Callback;
+package com.zjl.cn.callback;
 
 public class Student implements DoHomeWork {
 
