@@ -40,12 +40,13 @@ public abstract class Message implements Serializable {
     public static final int GroupMembersResponseMessage = 13;
     public static final int PingMessage = 14;
     public static final int PongMessage = 15;
+
     /**
-     * 请求类型 byte 值
+     * RPC请求类型 byte 值
      */
     public static final int RPC_MESSAGE_TYPE_REQUEST = 101;
     /**
-     * 响应类型 byte 值
+     * RPC响应类型 byte 值
      */
     public static final int  RPC_MESSAGE_TYPE_RESPONSE = 102;
 

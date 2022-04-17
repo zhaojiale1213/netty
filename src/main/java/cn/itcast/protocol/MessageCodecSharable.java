@@ -43,7 +43,7 @@ public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message
         out.writeInt(msg.getSequenceId());
 
         // f - 15 => 15 * 16^0 + 15 * 16^1 = 255
-        /** 一个字节的填充位，保证为 2 的整数倍 */
+        /** 一个字节的填充位，保证为 2 的整数倍, 一个字节 = 2个16进制字符 */
         out.writeByte(0xff);
 
         // jdk方式获取序列化后的二进制数据

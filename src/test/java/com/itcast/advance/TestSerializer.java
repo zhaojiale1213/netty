@@ -28,7 +28,7 @@ public class TestSerializer {
 
         LoginRequestMessage message = new LoginRequestMessage("zhangsan", "123");
 
-//        channel.writeOutbound(message);
+        channel.writeOutbound(message);
         ByteBuf buf = messageToByteBuf(message);
         channel.writeInbound(buf);
 
