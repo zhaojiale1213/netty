@@ -25,13 +25,15 @@ public class RpcRequestMessageHandler extends SimpleChannelInboundHandler<RpcReq
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcRequestMessage message) {
         RpcResponseMessage responseMessage = new RpcResponseMessage();
+        responseMessage.setSequenceId(message.getSequenceId());
         try {
             HelloService service = (HelloService) ServicesFactory.getService(Class.forName(message.getInterfaceName()));
             Method method = service.getClass().getMethod(message.getMethodName(), message.getParameterTypes());
             Object ret = method.invoke(service, message.getParameterValue());
             responseMessage.setReturnValue(ret);
         } catch (Exception e) {
-            responseMessage.setExceptionValue(e);
+            log.error("rpc server err: ", e);
+            responseMessage.setExceptionValue(new Exception(e.getCause().getMessage()));
         }
         ctx.writeAndFlush(responseMessage);
     }

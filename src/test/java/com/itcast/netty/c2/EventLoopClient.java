@@ -8,6 +8,8 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
@@ -34,25 +36,27 @@ public class EventLoopClient {
                 @Override  // 初始化连接 - 连接建立后调用
                 protected void initChannel(NioSocketChannel ch) throws Exception {
                     ch.pipeline().addLast(new StringEncoder());
+                    ch.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG));
                 }
             })
             // 异步非阻塞的方法 main线程发起调用，nio线程（NioEventLoopGroup 中的一个线程）去执行
             .connect(new InetSocketAddress("127.0.0.1", 8080));
 
         // 1.使用 sync方法同步处理结果
-//        channelFuture.sync();  // 同步  阻塞方法 - 等待连接建立
-//        Channel channel = channelFuture.channel();// 连接对象
-//        log.info("{}", channel);
-//        System.out.println();
+        channelFuture.sync();  // 同步  阻塞方法 - 等待连接建立
+        Channel channel = channelFuture.channel();// 连接对象
+        log.info("{}", channel);
+        channel.writeAndFlush("123");
+        System.out.println();
 
         //2. 使用 addListener方法(回调)异步处理结果
-        channelFuture.addListener(new ChannelFutureListener() {
-            @Override
-            //nio线程在连接建立后，会调用 operationComplete 方法  --  回调方法
-            public void operationComplete(ChannelFuture future) throws Exception {
-                Channel channel = future.channel();
-                log.info("{}", channel);
-            }
-        });
+//        channelFuture.addListener(new ChannelFutureListener() {
+//            @Override
+//            //nio线程在连接建立后，会调用 operationComplete 方法  --  回调方法
+//            public void operationComplete(ChannelFuture future) throws Exception {
+//                Channel channel = future.channel();
+//                log.info("{}", channel);
+//            }
+//        });
     }
 }
