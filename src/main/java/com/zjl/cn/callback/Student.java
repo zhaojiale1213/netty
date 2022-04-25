@@ -1,6 +1,11 @@
 package com.zjl.cn.callback;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
+
 public class Student implements DoHomeWork {
+
+    private String name;
 
     /**
      * 室友做给答案
@@ -20,15 +25,30 @@ public class Student implements DoHomeWork {
 
     public void ask(final String homework, final RoomMate roomMate) {
         /** 此线程在这等待 */
-        new Thread(new Runnable() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                System.out.println("this指：" + this.getClass().getName() + "谁来调用ask方法");
+//                /** Student.this  内部类调用外部类时限定使用的对象 */
+//                roomMate.getAnswer(homework, Student.this);
+//            }
+//        }).start();
+        FutureTask<Object> futureTask = new FutureTask<>(new Callable<Object>() {
             @Override
-            public void run() {
+            public Object call() throws Exception {
                 System.out.println("this指：" + this.getClass().getName() + "谁来调用ask方法");
                 /** Student.this  内部类调用外部类时限定使用的对象 */
                 roomMate.getAnswer(homework, Student.this);
+                System.out.println("等待、、、、、、、、、、、、、、、");
+                return null;
             }
-        }).start();
-
+        });
+        new Thread(futureTask).start();
+//        try {
+//            futureTask.get();
+//        } catch (InterruptedException | ExecutionException e) {
+//            e.printStackTrace();
+//        }
         goHome();
     }
 
@@ -39,21 +59,28 @@ public class Student implements DoHomeWork {
     public static void main(String[] args) {
         Student student = new Student();
 
-        String aHomeWork = "1+1=?";
-
-        RoomMate roomMate = new RoomMate();
-
-        roomMate.getAnswer(aHomeWork, new DoHomeWork() {
-            @Override
-            public void doHomeWork(String question, String answer) {
-                System.out.println("作业：" + question + " 答案：" + answer);
-            }
-        });
-
-        System.out.println("+++++++++++++++++++++++++++++");
+//        String aHomeWork = "1+1=?";
+//
+//        RoomMate roomMate = new RoomMate();
+//
+//        roomMate.getAnswer(aHomeWork, new DoHomeWork() {
+//            @Override
+//            public void doHomeWork(String question, String answer) {
+//                System.out.println("作业：" + question + " 答案：" + answer);
+//            }
+//        });
+//
+//        System.out.println("+++++++++++++++++++++++++++++");
 
         String homework = "当x趋向于0，sin(x)/x =?";
         student.ask(homework, new RoomMate());
 
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }

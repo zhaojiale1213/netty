@@ -72,6 +72,8 @@ public class RpcClientManager {
                     args
                 );
                 // 2.发送消息
+                /** 同步 -- 只是将数据发出去 flush后，不会阻塞至服务端返回 */
+//                getChannel().writeAndFlush(message).sync();
                 getChannel().writeAndFlush(message);
 
                 // 3.用promise来接收结果                              指定promise对象异步接收结果的线程
