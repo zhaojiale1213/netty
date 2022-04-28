@@ -1,5 +1,8 @@
 package com.zjl.cn.snowflake;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @Description: 雪花算法
  * @Author: zjl
@@ -141,9 +144,13 @@ public class IdWorker {
         System.out.println(maxWorkerId);
 
         IdWorker idWorker = new IdWorker(0, 0, 0);
-        for (int i = 0; i < 20; i++) {
-            System.out.println(idWorker.nextId());
+        Set<Long> set = new HashSet<>();
+        for (int i = 0; i < 50; i++) {
+            long id = idWorker.nextId();
+            System.out.println(id);
+            set.add(id);
         }
+        System.out.println(set.size());
     }
 
 }
