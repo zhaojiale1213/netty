@@ -97,6 +97,7 @@ public class IdWorker {
 
             // 这个意思是说一个毫秒内最多只能有4096个数字，无论你传递多少进来，
             //这个位运算保证始终就是在4096这个范围内，避免你自己传递个sequence超过了4096这个范围
+            // sequence + 1自增，如果大于 sequenceMask = 4095 时，sequence = 0；
             sequence = (sequence + 1) & sequenceMask;
             //当某一毫秒的时间，产生的id数 超过4095，系统会进入等待，直到下一毫秒，系统继续产生ID
             if (sequence == 0) {

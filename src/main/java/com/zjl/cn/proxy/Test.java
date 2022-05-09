@@ -1,7 +1,11 @@
 package com.zjl.cn.proxy;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Proxy;
 import java.net.InetSocketAddress;
+import java.util.Properties;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -14,6 +18,25 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class Test {
 
+    public static void main(String[] args) throws IOException {
+        String s = "ABC";
+        System.out.println(testStr(s));
+        System.out.println(s);
+
+        String path = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+        System.out.println("path: " + path);
+        File file = new File(path);
+        System.out.println("file: " + file.getPath());
+        System.out.println("file: " + file.getCanonicalPath());
+        System.out.println("file: " + file.getAbsolutePath());
+
+    }
+
+
+    private static String testStr(String str) {
+        str = "abc";
+        return str;
+    }
 
     @org.junit.Test
     public void test() {
@@ -77,4 +100,37 @@ public class Test {
             }).start();
         }
     }
+
+    @org.junit.Test
+    public void test5() {
+        String path = this.getClass().getClassLoader().getResource("").getPath();
+        System.out.println(path);
+        String path1 = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+        System.out.println(path1);
+
+        File file = new File(path);
+        String name = file.getName();
+        System.out.println(name);
+
+        Class<? extends Test> clazz = this.getClass();
+        System.out.println(clazz.getResource("").getPath());
+        System.out.println(clazz.getName());
+        System.out.println(clazz.getSimpleName());
+
+    }
+
+
+    @org.junit.Test
+    public void test6() {
+        String s = "Abc";
+        System.out.println((int)'A');
+        System.out.println((int)'Z');
+        System.out.println((int)'a');
+        System.out.println((int)'z');
+
+        System.out.println((int)'1');
+        System.out.println('1' - 1);
+    }
+
+
 }
