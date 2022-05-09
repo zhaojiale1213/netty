@@ -1,5 +1,6 @@
 package com.zjl.cn.callback;
 
+import java.lang.reflect.Modifier;
 import java.util.concurrent.TimeUnit;
 
 // 室友类
@@ -30,12 +31,22 @@ public class RoomMate {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException {
         new RoomMate().getAnswer("1+1=?", new DoHomeWork() {
             @Override
             public void doHomeWork(String question, String answer) {
                 System.out.println("问题："+question+" 答案："+answer);
             }
         });
+        Class<?> clazz = Class.forName("com.zjl.cn.callback.DoHomeWork");
+        System.out.println(clazz);
+        // 判断是否是接口
+        System.out.println(clazz.isInterface());
+        // 判断是否是匿名内部类
+        System.out.println(clazz.isAnonymousClass());
+        // 通过修饰符判断是否是抽象类
+        int modifiers = clazz.getModifiers();
+        boolean anAbstract = Modifier.isAbstract(modifiers);
+        System.out.println(anAbstract);
     }
 }

@@ -26,6 +26,7 @@ public class Test {
         String path = Thread.currentThread().getContextClassLoader().getResource("").getPath();
         System.out.println("path: " + path);
         File file = new File(path);
+        System.out.println("file: " + file.getName());
         System.out.println("file: " + file.getPath());
         System.out.println("file: " + file.getCanonicalPath());
         System.out.println("file: " + file.getAbsolutePath());
