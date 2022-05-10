@@ -26,7 +26,7 @@ public class ClassUtil {
         // 标识是否要遍历该包路径下子包的类名
         boolean recursive = true;
         // 指定的包名
-        String pkg = "cn.hutool.aop.aspects";
+        String pkg = "cn.hutool.cache";
 //        String pkg = "com.zjl.cn.callback";
 
         List<Class<?>> classList = getClassList(pkg, recursive, null);
@@ -149,12 +149,13 @@ public class ClassUtil {
                 }
             }
             if (prefix != null && jarEntryName.endsWith(".class")) {
+                clazzName = clazzName.substring(0, clazzName.lastIndexOf("."));
                 if (prefix.equals(pkgName)) {
-                    System.out.println("jar entryName:" + jarEntryName);
+                    System.out.println("jar entryName:" + jarEntryName + "-- clazzName: " + clazzName);
                     addClassName(clazzList, clazzName, annotation);
                 } else if (isRecursive && prefix.startsWith(pkgName)) {
                     // 遍历子包名：子类
-                    System.out.println("jar entryName:" + jarEntryName +" isRecursive:" + isRecursive);
+                    System.out.println("jar entryName:" + jarEntryName + "-- clazzName: " + clazzName +" isRecursive:" + isRecursive);
                     addClassName(clazzList, clazzName, annotation);
                 }
             }
