@@ -1,4 +1,4 @@
-package com.zjl.cn.proxy;
+package com.zjl.cn.design.proxy;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

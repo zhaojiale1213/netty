@@ -1,11 +1,9 @@
-package com.zjl.cn.proxy;
+package com.zjl.cn.design.proxy;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Proxy;
 import java.net.InetSocketAddress;
-import java.util.Properties;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
