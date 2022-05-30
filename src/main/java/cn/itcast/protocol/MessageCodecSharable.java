@@ -18,6 +18,7 @@ import java.util.Objects;
 /**
  * @Description: 必须和 LengthFieldBasedFrameDecoder 一起使用，确保接到的 ByteBuf 消息是完整的
  *               编解码器
+ *               MessageToMessageCodec 自己回调用ReferenceCounted.release()方法释放bytebuf
  * @Author: zjl
  * @Date:Created in 2022/3/23 22:21
  * @Modified By:

@@ -27,7 +27,9 @@ public class TestSpi {
         Iterator<Say> iterator = sayServices.iterator();
         while (iterator.hasNext()) {
             Say say = iterator.next();
-            System.out.println(say.getClass().getName());
+            System.out.println(say.getClass().getName()); // 类的全限定名 com.zjl.cn.spi.Chinese
+            System.out.println(say.getClass().getSimpleName()); // 简单类名 Chinese
+            System.out.println(say.getClass().getCanonicalName());
             System.out.println(say.sayHello("张三"));
         }
     }
