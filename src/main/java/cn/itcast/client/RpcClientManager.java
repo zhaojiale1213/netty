@@ -56,6 +56,7 @@ public class RpcClientManager {
 //        System.out.println(helloService.sayHello("王五"));
     }
 
+    /** 使用接口获取接口的代理类，并且此时代理类类型为接口类型, new Class[]{interfaceClass} 必须要这样写 */
     @SuppressWarnings({"unchecked"})
     public static <T> T getProxyService(Class<T> interfaceClass) {
         return (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class[]{interfaceClass}, new InvocationHandler() {
